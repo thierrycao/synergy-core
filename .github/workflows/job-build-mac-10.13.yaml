@@ -112,12 +112,14 @@ jobs:
         run: |
           cd pkg
           ../CI/MacOS/notorize.sh
-
-      - name: Send package to Binary Storage
-        uses: garygrossgarten/github-action-scp@v0.7.3
+          
+      - name: Upload Artifact
+        # if: "github.event_name == 'release'"
+        uses: actions/upload-artifact@v2
         with:
-          local: "${{ github.workspace }}/pkg/"
-          remote: "${{ secrets.BINARIES_SSH_DIR }}/${{ steps.version.outputs.SYNERGY_REMOTE_FOLDER }}/"
-          host: ${{ secrets.BINARIES_SSH_HOST }}
-          username: ${{ secrets.BINARIES_SSH_USER }}
-          privateKey: ${{ secrets.BINARIES_SSH_KEY }}
+          name: ${{ steps.version.outputs.SYNERGY_DMG_FILENAME }}
+          path: "${{ github.workspace }}/pkg/"
+          retention-days: 1
+
+
+      
